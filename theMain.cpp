@@ -2,6 +2,7 @@
 #include "globals.h"
 #include "input.h"
 #include "Math2D.h"
+#include <string>
 
 
 namespace
@@ -34,9 +35,20 @@ namespace
 
 	bool IsHitRect(const rect& a, const rect& b)
 	{
-		bool hit;
-		//ここに当たり判定のコードを書く
-		return なんか;
+		//aが、固定のやつ、bが、動かすやつ	
+		
+		bool hit = false;
+		float aRight = a.pos.x + a.w;
+		float bLeft = b.pos.x;
+		//if (aRight > bLeft)
+		//	hit = true;
+		float aLeft = a.pos.x;
+		float bRight = b.pos.x + b.w;
+		if ((aLeft < bRight) && (aRight > bLeft))
+			hit = true;
+		DrawFormatString(30, 100, GetColor(255, 255, 255), "(aLeft < bRight) : %s", (aLeft < bRight) ? "true" : "false");
+		DrawFormatString(30, 120, GetColor(255, 255, 255), "(aRight > bLeft) : %s", (aRight > bLeft) ? "true" : "false");
+		return hit;
 	}
 
 
@@ -98,6 +110,7 @@ void MyGame()
 		bgColor = GetColor(BGCOLOR[0], BGCOLOR[1], BGCOLOR[2]);
 	}
 
+
 	DrawBox(0, 0, WIN_WIDTH, WIN_HEIGHT, bgColor, TRUE);
 	DrawBox((int)fixedRect.pos.x, (int)fixedRect.pos.y,
 		(int)(fixedRect.pos.x + fixedRect.w), (int)(fixedRect.pos.y + fixedRect.h),
@@ -105,6 +118,12 @@ void MyGame()
 	DrawBox((int)moveRect.pos.x, (int)moveRect.pos.y,
 		(int)(moveRect.pos.x + moveRect.w), (int)(moveRect.pos.y + moveRect.h),
 		GetColor(255, 255, 0), TRUE);
+	std::string hitStr[2] = { "当たってない", "当たった！" };
+	int fsize = GetFontSize();
+	SetFontSize(50);
+	DrawString(30, 30, hitStr[(int)hit].c_str(), GetColor(255, 255, 255), GetColor(255, 255, 0));
+	SetFontSize(fsize);
+	IsHitRect(fixedRect, moveRect);
 }
 
 
